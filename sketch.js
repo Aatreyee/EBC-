@@ -28,7 +28,7 @@ var losingSound;
 
 var stopWatch=5;
 
-var count=20;
+var count=0;
 
 var sadImg;
 
@@ -120,13 +120,15 @@ function setup(){
 
    store = createSprite(width/2,height/2);
    store.addImage(storeImg);
-   store.visibility=false;
+   store.visible=false;
 
    cyclist = createSprite(300,height/2);
    cyclist.addAnimation("cycle",cyclistImage);
    cyclist.scale=3;
    cyclist.visible = false;
-   cyclist.velocityX=4;
+   //cyclist.velocityX=4;
+	
+   dollarGroup = new Group();
    
    
 
@@ -286,14 +288,42 @@ for(var k=0;k<hotDog.length;k++){
       cloud.destroy();
       junko.destroy();
       background(sceneImg3);
+      fill("white");
+      textSize(20);
+      text("Count: "+count,width/2,100);
       cyclist.visible = true;
+
+      if(keyDown(UP_ARROW)){
+        cyclist.y = cyclist.y-10;
+      }
+      
+
+      if(keyDown(DOWN_ARROW)){
+        cyclist.y=cyclist.y+5;
+      }
+
+      if(keyDown(RIGHT_ARROW)){
+        cyclist.x=cyclist.x-4;
+      }
+  
+      if(keyDown(LEFT_ARROW)){
+        cyclist.x=cyclist.x+4;
+      }
+
+      if(dollarGroup.isTouching(cyclist)){
+        count = count+1;
+        dollarGroup[0].destroy();
+      }
+
 
       
       if(count===20){
         gameState=3;
       }
-      spawnNail();
+      spawnDollar();
       drawSprites();
+
+
 
 
       
@@ -317,34 +347,7 @@ for(var k=0;k<hotDog.length;k++){
       if(mousePressedOver(button1)){
         gameState=6;
       }
-      scene.destroy();
-      button.destroy();
-      cloud.destroy();
       
-      if(keyDown(UP_ARROW)){
-        cyclist.y = cyclist.y-10;
-      }
-      
-
-      if(keyDown(DOWN_ARROW)){
-        cyclist.y=cyclist.y+5;
-      }
-
-      if(keyDown("space")){
-        cyclist.x=cyclist.x-4;
-      }
-  
-      if(keyDown(LEFT_ARROW)){
-        cyclist.x=cyclist.x+4;
-      }
-
-      if(cyclist.isTouching(dollar)){
-        
-      }
-
-      
-      spawnNail();
-      spawnDollar();
       drawSprites();
   }
 
@@ -427,7 +430,8 @@ function spawnDollar(){
     dollar.velocityX = -4;
     dollar.y = Math.round(random(height+300,height/2-500));
     dollar.x = Math.round(random(width+300,width/2));
-   dollar.scale=0.1
+    dollar.scale=0.1
     dollar.lifetime = 1000;
+    dollarGroup.add(dollar);
   }
 }
